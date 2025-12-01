@@ -1,42 +1,45 @@
-# STool - Smart Git Repository Management Tool
+# Synapse CLI - Smart Development Tools
 
 [![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-STool 是一个强大的 Git 仓库管理工具，专为管理多个 Git 仓库而设计。它提供了批量操作、仓库信息查看、版本管理等功能，大大提高了开发者的工作效率。
+Synapse CLI 是一个强大的开发工具集，专为提高开发效率而设计。它提供了 Git 仓库批量管理、版本号替换、数据库文件处理等功能，大大提高了开发者的工作效率。
 
 ## ✨ 特性
 
-### 🔧 仓库管理
+### 🔧 仓库管理 (Repo)
 - **批量拉取** - 并发拉取当前目录下所有 Git 仓库
 - **仓库列表** - 显示仓库状态、分支信息、提交差异等
 - **分支切换** - 批量切换仓库分支，支持创建新分支
 - **仓库清理** - 批量重置和清理仓库工作区
 - **克隆脚本生成** - 生成批量克隆脚本，支持 HTTP/SSH 协议
 
-### 📝 版本管理
+### 📝 版本管理 (Version)
 - **版本替换** - 智能查找并替换项目中的版本号
+
+### 🗄️ 数据库工具 (DB)
+- **清理 ID 字段** - 移除 SQL INSERT 语句中的 id 字段及对应值
 
 ## 🚀 安装
 
 ### 从源码构建
 
 ```bash
-git clone https://github.com/your-username/stool.git
-cd stool
+git clone https://github.com/your-username/synapse-cli.git
+cd synapse-cli
 cargo build --release
 ```
 
-构建完成后，可执行文件位于 `target/release/st`。
+构建完成后，可执行文件位于 `target/release/synapse`。
 
 ### 添加到 PATH
 
 ```bash
 # 将可执行文件复制到系统路径
-sudo cp target/release/st /usr/local/bin/
+sudo cp target/release/synapse /usr/local/bin/
 
 # 或者添加到你的 shell 配置文件
-echo 'export PATH="$PATH:/path/to/stool/target/release"' >> ~/.bashrc
+echo 'export PATH="$PATH:/path/to/synapse-cli/target/release"' >> ~/.bashrc
 ```
 
 ## 📖 使用指南
@@ -46,43 +49,43 @@ echo 'export PATH="$PATH:/path/to/stool/target/release"' >> ~/.bashrc
 #### 查看仓库列表
 ```bash
 # 显示当前目录下所有 Git 仓库的状态
-st repo ls
+synapse repo ls
 
 # 同时获取远程仓库信息（会执行 git fetch）
-st repo ls --fetch
+synapse repo ls --fetch
 ```
 
 #### 批量拉取更新
 ```bash
 # 并发拉取所有仓库的最新代码
-st repo pull
+synapse repo pull
 ```
 
 #### 批量切换分支
 ```bash
 # 切换到指定分支
-st repo switch main
+synapse repo switch main
 
 # 强制切换（如果分支不存在则创建）
-st repo switch --force feature-branch
+synapse repo switch --force feature-branch
 ```
 
 #### 批量清理仓库
 ```bash
 # 重置所有仓库到 HEAD 并清理未跟踪文件
-st repo clean
+synapse repo clean
 ```
 
 #### 生成克隆脚本
 ```bash
 # 输出克隆命令到控制台
-st repo genclone
+synapse repo genclone
 
 # 保存克隆脚本到文件
-st repo genclone --save --path ./clone_all.sh
+synapse repo genclone -f --path ./clone_all.sh
 
 # 使用 SSH 协议
-st repo genclone --transport ssh --save
+synapse repo genclone -t ssh -f
 ```
 
 ### 版本管理命令
@@ -90,7 +93,15 @@ st repo genclone --transport ssh --save
 #### 替换版本号
 ```bash
 # 在当前目录下查找并替换版本号
-st version replace "1.0.0" "1.1.0"
+synapse version replace "1.0.0" "1.1.0"
+```
+
+### 数据库工具命令
+
+#### 清理 SQL 文件中的 ID 字段
+```bash
+# 移除 INSERT 语句中的 id 字段及对应值（会生成 .bak 备份文件）
+synapse db rmid ./data.sql
 ```
 
 ## 🏗️ 项目结构
@@ -102,14 +113,17 @@ src/
 ├── cli/                # 命令行接口
 │   ├── mod.rs          # CLI 模块入口
 │   └── commands.rs     # 命令定义
-├── git/                # Git 操作相关
-│   ├── mod.rs          # Git 模块入口
+├── repo/               # Git 仓库操作相关
+│   ├── mod.rs          # Repo 模块入口
 │   ├── repo.rs         # 仓库发现和信息获取
 │   ├── operations.rs   # Git 操作（pull, fetch, switch 等）
 │   └── clone.rs        # 克隆相关功能
 ├── version/            # 版本管理
 │   ├── mod.rs          # 版本模块入口
 │   └── replace.rs      # 版本替换功能
+├── db/                 # 数据库工具
+│   ├── mod.rs          # DB 模块入口
+│   └── rmid.rs         # 清理 SQL ID 字段
 └── utils/              # 工具模块
     ├── mod.rs          # 工具模块入口
     ├── command.rs      # 命令执行工具
@@ -150,8 +164,8 @@ cargo install sd
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/stool.git
-cd stool
+git clone https://github.com/your-username/synapse-cli.git
+cd synapse-cli
 
 # 运行测试
 cargo test
@@ -177,10 +191,10 @@ cargo clippy
 
 如果你遇到问题或有建议，请：
 
-1. 查看 [Issues](https://github.com/your-username/stool/issues) 页面
+1. 查看 [Issues](https://github.com/your-username/synapse-cli/issues) 页面
 2. 创建新的 Issue 描述问题
 3. 或者直接提交 Pull Request
 
 ---
 
-**STool** - 让 Git 仓库管理变得简单高效！ 🚀
+**Synapse CLI** - 让开发工作变得简单高效！ 🚀
