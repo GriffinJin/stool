@@ -17,16 +17,7 @@ fn main() {
 
     match cli.command {
         Commands::Repo { command } => match command {
-            RepoCommands::Pull => {
-                let cwd = env::current_dir().expect("无法获取当前目录");
-                let repos = find_git_repos(&cwd);
-                if repos.is_empty() {
-                    println!("当前目录未发现 Git 仓库");
-                    return;
-                }
-                pull_all_repos_parallel(repos);
-            }
-            RepoCommands::Ls { fetch } => {
+            RepoCommands::Ls { fetch, pull } => {
                 let cwd = env::current_dir().expect("无法获取当前目录");
                 let repos = find_git_repos(&cwd);
                 if repos.is_empty() {
@@ -37,6 +28,10 @@ fn main() {
                 if fetch {
                     println!("正在获取远程仓库信息...");
                     fetch_all_repos_parallel(repos.clone());
+                }
+
+                if pull {
+                     pull_all_repos_parallel(repos.clone());
                 }
 
                 let infos = get_repos_info_parallel(repos);

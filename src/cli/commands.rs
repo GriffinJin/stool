@@ -25,13 +25,13 @@ pub enum Commands {
 
 #[derive(Subcommand, Debug)]
 pub enum RepoCommands {
-    /// 拉取当前执行目录下所有的 Git 仓库
-    Pull,
     /// 展示当前目录下所有的 Git 仓库
     Ls {
         /// 在列出信息前执行 git fetch 以获取最新远端信息
         #[arg(short, long)]
         fetch: bool,
+        #[arg(short, long)]
+        pull: bool
     },
     /// 切换所有仓库到指定分支
     Switch {
