@@ -17,7 +17,7 @@ fn main() {
 
     match cli.command {
         Commands::Repo { command } => match command {
-            RepoCommands::Ls { fetch, pull } => {
+            RepoCommands::Ls { fetch, pull, clean } => {
                 let cwd = env::current_dir().expect("无法获取当前目录");
                 let repos = find_git_repos(&cwd);
                 if repos.is_empty() {
@@ -32,6 +32,10 @@ fn main() {
 
                 if pull {
                      pull_all_repos_parallel(repos.clone());
+                }
+
+                if clean {
+                    clean_all_repos_parallel(repos.clone());
                 }
 
                 let infos = get_repos_info_parallel(repos);
@@ -85,15 +89,6 @@ fn main() {
                         eprintln!("版本替换失败: {}", e);
                     }
                 }
-            }
-            RepoCommands::Clean => {
-                let cwd = env::current_dir().expect("无法获取当前目录");
-                let repos = find_git_repos(&cwd);
-                if repos.is_empty() {
-                    println!("当前目录未发现 Git 仓库");
-                    return;
-                }
-                clean_all_repos_parallel(repos);
             }
         },
         Commands::Db { command } => match command {

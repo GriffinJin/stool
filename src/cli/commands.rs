@@ -31,7 +31,9 @@ pub enum RepoCommands {
         #[arg(short, long)]
         fetch: bool,
         #[arg(short, long)]
-        pull: bool
+        pull: bool,
+        #[arg(short, long)]
+        clean: bool,
     },
     /// 切换所有仓库到指定分支
     Switch {
@@ -54,8 +56,6 @@ pub enum RepoCommands {
         /// 新版本号
         new_version: String,
     },
-    /// 清理当前执行目录下所有 Git 仓库（reset+clean）
-    Clean,
 }
 
 
