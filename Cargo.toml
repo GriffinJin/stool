@@ -1,5 +1,5 @@
 [package]
-name = "synapse-cli"
+name = "synapse_cli"
 version = "0.2.0"
 edition = "2024"
 license = "MIT"

@@ -196,7 +196,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "synapse-cli"
+name = "synapse_cli"
 version = "0.2.0"
 dependencies = [
  "clap",
