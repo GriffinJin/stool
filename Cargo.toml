@@ -1,13 +1,13 @@
 [package]
-name = "stool"
+name = "synapse-cli"
 version = "0.2.0"
 edition = "2024"
 license = "MIT"
 readme = "README.md"
-description = "Smart Git multi-repo management CLI."
+description = ""
 
 [[bin]]
-name = "st"
+name = "synapse"
 path = "src/main.rs"
 
 [dependencies]
