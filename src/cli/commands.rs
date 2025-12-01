@@ -30,13 +30,14 @@ pub enum Commands {
 
 #[derive(Subcommand, Debug)]
 pub enum RepoCommands {
-    /// 拉取当前执行目录下所有的 Git 仓库
-    Pull,
-    /// 展示当前执行目录下所有的 Git 仓库
     Ls {
         /// 在列出信息前执行 git fetch 以获取最新远端信息
         #[arg(short, long)]
         fetch: bool,
+        #[arg(short, long)]
+        pull: bool,
+        #[arg(short, long)]
+        clean: bool,
     },
     /// 切换所有仓库到指定分支
     Switch {
@@ -57,8 +58,6 @@ pub enum RepoCommands {
         #[arg(short = 't', long = "transport")]
         transport: Option<String>,
     },
-    /// 清理当前执行目录下所有 Git 仓库（reset+clean）
-    Clean,
 }
 
 #[derive(Subcommand, Debug)]
