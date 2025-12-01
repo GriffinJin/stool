@@ -16,11 +16,6 @@ pub enum Commands {
         #[command(subcommand)]
         command: RepoCommands,
     },
-    /// 版本号相关命令
-    Version {
-        #[command(subcommand)]
-        command: VersionCommands,
-    },
     /// 数据库相关命令
     Db {
         #[command(subcommand)]
@@ -52,20 +47,17 @@ pub enum RepoCommands {
         #[arg(short = 's', long = "save")]
         save: bool,
     },
-    /// 清理当前执行目录下所有 Git 仓库（reset+clean）
-    Clean,
-}
-
-#[derive(Subcommand, Debug)]
-pub enum VersionCommands {
     /// 替换当前目录及子目录中包含旧版本号的文件内容
-    Replace {
+    Updateversion {
         /// 旧版本号
         old_version: String,
         /// 新版本号
         new_version: String,
     },
+    /// 清理当前执行目录下所有 Git 仓库（reset+clean）
+    Clean,
 }
+
 
 #[derive(Subcommand, Debug)]
 pub enum DbCommands {

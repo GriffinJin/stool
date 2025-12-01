@@ -3,7 +3,7 @@ use std::env;
 use std::path::Path;
 
 use synapse_cli::{
-    Cli, Commands, RepoCommands, VersionCommands, DbCommands,
+    Cli, Commands, RepoCommands, DbCommands,
     repo::{find_git_repos, get_repos_info_parallel, print_repos_table, 
           pull_all_repos_parallel, fetch_all_repos_parallel, 
           switch_all_repos_parallel, clean_all_repos_parallel,
@@ -78,18 +78,7 @@ fn main() {
                     }
                 }
             }
-            RepoCommands::Clean => {
-                let cwd = env::current_dir().expect("无法获取当前目录");
-                let repos = find_git_repos(&cwd);
-                if repos.is_empty() {
-                    println!("当前目录未发现 Git 仓库");
-                    return;
-                }
-                clean_all_repos_parallel(repos);
-            }
-        },
-        Commands::Version { command } => match command {
-            VersionCommands::Replace { old_version, new_version } => {
+            RepoCommands::Updateversion { old_version, new_version } => {
                 let cwd = env::current_dir().expect("无法获取当前目录");
                 println!("正在替换版本号: {} -> {}", old_version, new_version);
                 
@@ -101,6 +90,15 @@ fn main() {
                         eprintln!("版本替换失败: {}", e);
                     }
                 }
+            }
+            RepoCommands::Clean => {
+                let cwd = env::current_dir().expect("无法获取当前目录");
+                let repos = find_git_repos(&cwd);
+                if repos.is_empty() {
+                    println!("当前目录未发现 Git 仓库");
+                    return;
+                }
+                clean_all_repos_parallel(repos);
             }
         },
         Commands::Db { command } => match command {
