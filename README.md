@@ -1,143 +1,42 @@
-# Synapse CLI - Smart Development Tools
+# Synapse CLI
 
 [![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](Cargo.toml)
 
-Synapse CLI 是一个强大的开发工具集，专为提高开发效率而设计。它提供了 Git 仓库批量管理、版本号替换、数据库文件处理等功能，大大提高了开发者的工作效率。
+A powerful command-line toolkit for Sunline development, designed to boost developer productivity. Provides batch Git repository management, workspace management, version replacement, and database file processing capabilities.
 
-## ✨ 特性
+## ✨ Features
 
-### 🔧 仓库管理 (Repo)
-- **批量拉取** - 并发拉取当前目录下所有 Git 仓库
-- **仓库列表** - 显示仓库状态、分支信息、提交差异等
-- **分支切换** - 批量切换仓库分支，支持创建新分支
-- **仓库清理** - 批量重置和清理仓库工作区
-- **克隆脚本生成** - 生成批量克隆脚本，支持 HTTP/SSH 协议
+### 🔧 Repository Management
+- **Batch Operations** - Parallel operations on multiple Git repositories
+- **Repository Listing** - Display repository status, branch info, and commit differences
+- **Branch Switching** - Switch all repositories to a specified branch with force create option
+- **Repository Cleaning** - Batch reset and clean repository working directories
+- **Clone Script Generation** - Generate batch clone commands (auto-detects HTTP/SSH)
 
-### 📝 版本管理 (Version)
-- **版本替换** - 智能查找并替换项目中的版本号
+### 📁 Workspace Management
+- **Create Workspaces** - Create and manage development workspaces
+- **Initialize Workspaces** - Initialize current directory as a workspace
+- **List Workspaces** - View all available workspaces
+- **Switch Workspaces** - Quickly switch between different workspaces
 
-### 🗄️ 数据库工具 (DB)
-- **清理 ID 字段** - 移除 SQL INSERT 语句中的 id 字段及对应值
+### 📝 Version Management
+- **Version Replacement** - Intelligently find and replace version numbers across projects
 
-## 🚀 安装
+### 🗄️ Database Tools
+- **Clean ID Fields** - Remove id fields and corresponding values from SQL INSERT statements
 
-### 从源码构建
+## 🚀 Installation
 
-```bash
-git clone https://github.com/your-username/synapse-cli.git
-cd synapse-cli
-cargo build --release
-```
+### Prerequisites
 
-构建完成后，可执行文件位于 `target/release/synapse`。
+Make sure you have the following tools installed:
 
-### 添加到 PATH
-
-```bash
-# 将可执行文件复制到系统路径
-sudo cp target/release/synapse /usr/local/bin/
-
-# 或者添加到你的 shell 配置文件
-echo 'export PATH="$PATH:/path/to/synapse-cli/target/release"' >> ~/.bashrc
-```
-
-## 📖 使用指南
-
-### 仓库管理命令
-
-#### 查看仓库列表
-```bash
-# 显示当前目录下所有 Git 仓库的状态
-synapse repo ls
-
-# 同时获取远程仓库信息（会执行 git fetch）
-synapse repo ls --fetch
-```
-
-#### 批量拉取更新
-```bash
-# 并发拉取所有仓库的最新代码
-synapse repo pull
-```
-
-#### 批量切换分支
-```bash
-# 切换到指定分支
-synapse repo switch main
-
-# 强制切换（如果分支不存在则创建）
-synapse repo switch --force feature-branch
-```
-
-#### 批量清理仓库
-```bash
-# 重置所有仓库到 HEAD 并清理未跟踪文件
-synapse repo clean
-```
-
-#### 生成克隆脚本
-```bash
-# 输出克隆命令到控制台
-synapse repo genclone
-
-# 保存克隆脚本到文件
-synapse repo genclone -f --path ./clone_all.sh
-
-# 使用 SSH 协议
-synapse repo genclone -t ssh -f
-```
-
-### 版本管理命令
-
-#### 替换版本号
-```bash
-# 在当前目录下查找并替换版本号
-synapse version replace "1.0.0" "1.1.0"
-```
-
-### 数据库工具命令
-
-#### 清理 SQL 文件中的 ID 字段
-```bash
-# 移除 INSERT 语句中的 id 字段及对应值（会生成 .bak 备份文件）
-synapse db rmid ./data.sql
-```
-
-## 🏗️ 项目结构
-
-```
-src/
-├── lib.rs              # 库入口，模块导出
-├── main.rs             # 主程序入口
-├── cli/                # 命令行接口
-│   ├── mod.rs          # CLI 模块入口
-│   └── commands.rs     # 命令定义
-├── repo/               # Git 仓库操作相关
-│   ├── mod.rs          # Repo 模块入口
-│   ├── repo.rs         # 仓库发现和信息获取
-│   ├── operations.rs   # Git 操作（pull, fetch, switch 等）
-│   └── clone.rs        # 克隆相关功能
-├── version/            # 版本管理
-│   ├── mod.rs          # 版本模块入口
-│   └── replace.rs      # 版本替换功能
-├── db/                 # 数据库工具
-│   ├── mod.rs          # DB 模块入口
-│   └── rmid.rs         # 清理 SQL ID 字段
-└── utils/              # 工具模块
-    ├── mod.rs          # 工具模块入口
-    ├── command.rs      # 命令执行工具
-    └── parallel.rs     # 并发执行框架
-```
-
-## 🔧 依赖要求
-
-- **Rust** 1.70 或更高版本
-- **Git** - 系统需要安装 Git
-- **ripgrep (rg)** - 用于文件搜索（版本替换功能）
-- **sd** - 用于文本替换（版本替换功能）
-
-### 安装依赖工具
+- **Rust** 1.70 or higher
+- **Git** - Version control system
+- **ripgrep (rg)** - Fast text search (required for version replacement)
+- **sd** - Text substitution tool (required for version replacement)
 
 ```bash
 # macOS
@@ -146,55 +45,253 @@ brew install ripgrep sd
 # Ubuntu/Debian
 sudo apt install ripgrep
 cargo install sd
-
-# 其他系统请参考相应工具的官方文档
 ```
 
-## 🤝 贡献
-
-欢迎贡献代码！请遵循以下步骤：
-
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
-
-### 开发指南
+### Build from Source
 
 ```bash
-# 克隆仓库
-git clone https://github.com/your-username/synapse-cli.git
+git clone <repository-url>
 cd synapse-cli
-
-# 运行测试
-cargo test
-
-# 检查代码格式
-cargo fmt --check
-
-# 运行 linter
-cargo clippy
+cargo build --release
 ```
 
-## 📄 许可证
+The binary will be located at `target/release/synapse`.
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+### Installation
 
-## 🙏 致谢
+```bash
+# Install to system path
+cargo install --path .
 
-- [clap](https://github.com/clap-rs/clap) - 命令行参数解析
-- [ripgrep](https://github.com/BurntSushi/ripgrep) - 快速文本搜索
-- [sd](https://github.com/chmln/sd) - 直观的查找和替换工具
+# Or manually copy to PATH
+sudo cp target/release/synapse /usr/local/bin/
+```
 
-## 📞 支持
+## 📖 Usage Guide
 
-如果你遇到问题或有建议，请：
+### Repository Commands
 
-1. 查看 [Issues](https://github.com/your-username/synapse-cli/issues) 页面
-2. 创建新的 Issue 描述问题
-3. 或者直接提交 Pull Request
+#### List Repositories
+
+Display all Git repositories in the current directory:
+
+```bash
+# Show repository status
+synapse repo ls
+
+# Fetch remote information before listing
+synapse repo ls --fetch
+
+# Pull all repositories
+synapse repo ls --pull
+
+# Clean all repositories
+synapse repo ls --clean
+
+# Combine operations
+synapse repo ls --fetch --pull
+```
+
+#### Switch Branches
+
+Switch all repositories to a specified branch:
+
+```bash
+# Switch to branch
+synapse repo switch main
+
+# Force switch (create branch if it doesn't exist)
+synapse repo switch --force feature-branch
+```
+
+#### Generate Clone Commands
+
+Generate batch clone commands (auto-detects HTTP/SSH protocol):
+
+```bash
+# Print clone commands to console
+synapse repo genclone
+
+# Save to clone.sh in current directory
+synapse repo genclone --save
+```
+
+#### Update Version Numbers
+
+Replace version numbers across the project:
+
+```bash
+# Replace version in all files
+synapse repo updateversion 1.0.0 1.1.0
+```
+
+This command uses `ripgrep` to find files containing the old version and `sd` to perform the replacement.
+
+### Workspace Commands
+
+#### Create New Workspace
+
+```bash
+synapse workspace new
+```
+
+#### Initialize Current Directory
+
+Initialize the current directory as a workspace:
+
+```bash
+synapse workspace init
+```
+
+#### List All Workspaces
+
+```bash
+synapse workspace ls
+```
+
+#### Switch to Workspace
+
+Switch to a specified workspace:
+
+```bash
+synapse workspace cd <workspace-name>
+```
+
+### Database Commands
+
+#### Remove ID Fields from SQL
+
+Clean ID fields from INSERT statements:
+
+```bash
+# Process SQL file (creates .bak backup)
+synapse db rmid ./data.sql
+```
+
+This command:
+- Removes the `id` field from INSERT statements
+- Removes the corresponding first value
+- Creates a `.bak` backup file automatically
+- Modifies the original file in place
+
+## 🏗️ Project Structure
+
+```
+src/
+├── lib.rs              # Library entry point, module exports
+├── main.rs             # Binary entry point
+├── cli/                # Command-line interface
+│   ├── mod.rs          # CLI module entry
+│   └── commands.rs     # Command definitions (using clap)
+├── repo/               # Repository operations
+│   ├── mod.rs          # Repo module entry
+│   ├── repo.rs         # Repository discovery and info gathering
+│   ├── operations.rs   # Git operations (pull, fetch, switch, clean)
+│   └── clone.rs        # Clone command generation
+├── workspace/          # Workspace management
+│   ├── mod.rs          # Workspace module entry
+│   └── operations.rs   # Workspace operations (new, init, ls, cd)
+├── version/            # Version management
+│   ├── mod.rs          # Version module entry
+│   └── replace.rs      # Version replacement functionality
+├── db/                 # Database utilities
+│   ├── mod.rs          # DB module entry
+│   └── rmid.rs         # SQL ID field removal
+└── utils/              # Utility modules
+    ├── mod.rs          # Utils module entry
+    ├── command.rs      # Command execution helpers
+    └── parallel.rs     # Parallel execution framework
+```
+
+## 🔧 Dependencies
+
+### Runtime Dependencies
+
+- **Rust** 1.70+ (Rust 2024 edition)
+- **Git** - Required for repository operations
+- **ripgrep (rg)** - Required for version replacement functionality
+- **sd** - Required for version replacement functionality
+
+### Rust Crates
+
+- `clap` 4.5.4 - Command-line argument parsing with derive macros
+- `regex` 1.10 - Regular expression support
+- `directories` 5.0 - Platform-specific directory paths
+
+## ⚙️ Configuration
+
+The tool uses platform-appropriate directories for cache and configuration:
+
+- **macOS**: `~/Library/Application Support/synapse-cli`
+- **Linux**: `~/.config/synapse-cli`
+- **Windows**: `%APPDATA%\synapse-cli`
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd synapse-cli
+
+# Run tests
+cargo test
+
+# Check code formatting
+cargo fmt --check
+
+# Run linter
+cargo clippy
+
+# Build in debug mode
+cargo build
+
+# Build in release mode
+cargo build --release
+```
+
+### Code Standards
+
+- Follow Rust 2024 edition standards
+- Ensure all tests pass before submitting
+- Add documentation for new features
+- Use clear and descriptive commit messages
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [clap](https://github.com/clap-rs/clap) - Command-line argument parsing
+- [regex](https://github.com/rust-lang/regex) - Regular expression support
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - Fast text search
+- [sd](https://github.com/chmln/sd) - Intuitive find & replace tool
+- [directories](https://github.com/dirs-dev/directories-rs) - Platform-specific directory paths
+
+## 📞 Support
+
+If you encounter issues or have suggestions:
+
+1. Check the [Issues](https://github.com/your-username/synapse-cli/issues) page
+2. Create a new Issue describing the problem
+3. Or submit a Pull Request directly
+
+## 🚀 Performance
+
+- **Parallel Processing**: All batch operations use concurrent execution for maximum performance
+- **Efficient Search**: Leverages ripgrep for high-speed file searching
+- **Smart Caching**: Uses platform-specific cache directories for optimal performance
 
 ---
 
-**Synapse CLI** - 让开发工作变得简单高效！ 🚀
+**Synapse CLI** - Making development work simple and efficient! 🚀
