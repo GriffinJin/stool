@@ -4,7 +4,7 @@ use std::path::Path;
 
 use synapse_cli::{
     Cli, Commands, RepoCommands, VersionCommands, DbCommands,
-    git::{find_git_repos, get_repos_info_parallel, print_repos_table, 
+    repo::{find_git_repos, get_repos_info_parallel, print_repos_table, 
           pull_all_repos_parallel, fetch_all_repos_parallel, 
           switch_all_repos_parallel, clean_all_repos_parallel,
           gen_clone_commands, save_script},
