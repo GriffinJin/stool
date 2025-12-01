@@ -16,6 +16,11 @@ pub enum Commands {
         #[command(subcommand)]
         command: RepoCommands,
     },
+    /// 工作区相关命令
+    Workspace {
+        #[command(subcommand)]
+        command: WorkspaceCommands,
+    },
     /// 数据库相关命令
     Db {
         #[command(subcommand)]
@@ -55,6 +60,21 @@ pub enum RepoCommands {
         old_version: String,
         /// 新版本号
         new_version: String,
+    },
+}
+
+#[derive(Subcommand, Debug)]
+pub enum WorkspaceCommands {
+    /// 创建新工作区
+    New,
+    /// 初始化当前目录为工作区
+    Init,
+    /// 列出所有工作区
+    Ls,
+    /// 切换到指定工作区
+    Cd {
+        /// 工作区名称
+        workspace_name: String,
     },
 }
 

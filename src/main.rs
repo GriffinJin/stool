@@ -3,11 +3,12 @@ use std::env;
 use std::path::Path;
 
 use synapse_cli::{
-    Cli, Commands, RepoCommands, DbCommands,
+    Cli, Commands, RepoCommands, WorkspaceCommands, DbCommands,
     repo::{find_git_repos, get_repos_info_parallel, print_repos_table, 
           pull_all_repos_parallel, fetch_all_repos_parallel, 
           switch_all_repos_parallel, clean_all_repos_parallel,
           gen_clone_commands, save_script},
+    workspace::{create_workspace, init_workspace, list_workspaces, switch_workspace},
     version::version_replace,
     db::rmid_file,
 };
@@ -88,6 +89,32 @@ fn main() {
                     Err(e) => {
                         eprintln!("版本替换失败: {}", e);
                     }
+                }
+            }
+        },
+        Commands::Workspace { command } => match command {
+            WorkspaceCommands::New => {
+                if let Err(e) = create_workspace() {
+                    eprintln!("错误: {}", e);
+                    std::process::exit(1);
+                }
+            }
+            WorkspaceCommands::Init => {
+                if let Err(e) = init_workspace() {
+                    eprintln!("错误: {}", e);
+                    std::process::exit(1);
+                }
+            }
+            WorkspaceCommands::Ls => {
+                if let Err(e) = list_workspaces() {
+                    eprintln!("错误: {}", e);
+                    std::process::exit(1);
+                }
+            }
+            WorkspaceCommands::Cd { workspace_name } => {
+                if let Err(e) = switch_workspace(&workspace_name) {
+                    eprintln!("错误: {}", e);
+                    std::process::exit(1);
                 }
             }
         },
