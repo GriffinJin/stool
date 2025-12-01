@@ -17,7 +17,16 @@ fn main() {
 
     match cli.command {
         Commands::Repo { command } => match command {
-            RepoCommands::Ls { fetch, pull, clean } => {
+            RepoCommands::Pull => {
+                let cwd = env::current_dir().expect("无法获取当前目录");
+                let repos = find_git_repos(&cwd);
+                if repos.is_empty() {
+                    println!("当前目录未发现 Git 仓库");
+                    return;
+                }
+                pull_all_repos_parallel(repos);
+            }
+            RepoCommands::Ls { fetch } => {
                 let cwd = env::current_dir().expect("无法获取当前目录");
                 let repos = find_git_repos(&cwd);
                 if repos.is_empty() {
@@ -28,16 +37,6 @@ fn main() {
                 if fetch {
                     println!("正在获取远程仓库信息...");
                     fetch_all_repos_parallel(repos.clone());
-                }
-                
-                if pull {
-                    println!("正在拉取最新代码...");
-                    pull_all_repos_parallel(repos.clone());
-                }
-
-                if clean {
-                    println!("正在清理仓库...");
-                    clean_all_repos_parallel(repos.clone()); 
                 }
 
                 let infos = get_repos_info_parallel(repos);
@@ -52,7 +51,7 @@ fn main() {
                 }
                 switch_all_repos_parallel(&branch, force, repos);
             }
-            RepoCommands::Genclone { save, path, transport } => {
+            RepoCommands::Genclone { save } => {
                 let cwd = env::current_dir().expect("无法获取当前目录");
                 let repos = find_git_repos(&cwd);
                 if repos.is_empty() {
@@ -60,17 +59,10 @@ fn main() {
                     return;
                 }
 
-                let transport = transport.as_deref().unwrap_or("http");
-                if transport != "http" && transport != "ssh" {
-                    eprintln!("错误: transport 参数只支持 'http' 或 'ssh'");
-                    return;
-                }
-
-                let commands = gen_clone_commands(repos, transport);
+                let commands = gen_clone_commands(repos);
 
                 if save {
-                    let script_path = path.as_deref().unwrap_or("./clone_all.sh");
-                    let script_path = Path::new(script_path);
+                    let script_path = Path::new("./clone.sh");
                     
                     match save_script(script_path, &commands) {
                         Ok(()) => {
@@ -85,6 +77,15 @@ fn main() {
                         println!("{}", cmd);
                     }
                 }
+            }
+            RepoCommands::Clean => {
+                let cwd = env::current_dir().expect("无法获取当前目录");
+                let repos = find_git_repos(&cwd);
+                if repos.is_empty() {
+                    println!("当前目录未发现 Git 仓库");
+                    return;
+                }
+                clean_all_repos_parallel(repos);
             }
         },
         Commands::Version { command } => match command {

@@ -30,14 +30,13 @@ pub enum Commands {
 
 #[derive(Subcommand, Debug)]
 pub enum RepoCommands {
+    /// 拉取当前执行目录下所有的 Git 仓库
+    Pull,
+    /// 展示当前目录下所有的 Git 仓库
     Ls {
         /// 在列出信息前执行 git fetch 以获取最新远端信息
         #[arg(short, long)]
         fetch: bool,
-        #[arg(short, long)]
-        pull: bool,
-        #[arg(short, long)]
-        clean: bool,
     },
     /// 切换所有仓库到指定分支
     Switch {
@@ -47,17 +46,14 @@ pub enum RepoCommands {
         #[arg(short, long)]
         force: bool,
     },
-    /// 根据当前目录下一层的仓库生成批量 clone 命令
+    /// 根据当前目录下一层的仓库生成批量 clone 命令（自动检测 HTTP/SSH）
     Genclone {
-        /// 保存为脚本文件（例如 -f ./clone_all.sh）
-        #[arg(short = 'f', long = "file")]
+        /// 保存为脚本文件到当前目录的 clone.sh
+        #[arg(short = 's', long = "save")]
         save: bool,
-        /// 脚本保存路径（仅在 -f 时生效）
-        path: Option<String>,
-        /// 传输协议："http" 或 "ssh"，默认 http
-        #[arg(short = 't', long = "transport")]
-        transport: Option<String>,
     },
+    /// 清理当前执行目录下所有 Git 仓库（reset+clean）
+    Clean,
 }
 
 #[derive(Subcommand, Debug)]

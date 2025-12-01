@@ -21,61 +21,14 @@ fn get_default_remote_url(dir: &Path) -> Option<String> {
         })
 }
 
-/// 将 SSH URL 转换为 HTTP URL
-fn to_http(url: &str) -> String {
-    if url.starts_with("git@") {
-        // git@github.com:user/repo.git -> https://github.com/user/repo.git
-        let without_prefix = url.strip_prefix("git@").unwrap();
-        if let Some(colon_pos) = without_prefix.find(':') {
-            let host = &without_prefix[..colon_pos];
-            let path = &without_prefix[colon_pos + 1..];
-            return format!("https://{}/{}", host, path);
-        }
-    } else if url.starts_with("ssh://git@") {
-        // ssh://git@github.com/user/repo.git -> https://github.com/user/repo.git
-        let without_prefix = url.strip_prefix("ssh://git@").unwrap();
-        return format!("https://{}", without_prefix);
-    }
-    
-    // 如果已经是 HTTP/HTTPS，直接返回
-    url.to_string()
-}
-
-/// 将 HTTP URL 转换为 SSH URL
-fn to_ssh(url: &str) -> String {
-    if url.starts_with("https://") {
-        // https://github.com/user/repo.git -> git@github.com:user/repo.git
-        let without_prefix = url.strip_prefix("https://").unwrap();
-        if let Some(slash_pos) = without_prefix.find('/') {
-            let host = &without_prefix[..slash_pos];
-            let path = &without_prefix[slash_pos + 1..];
-            return format!("git@{}:{}", host, path);
-        }
-    } else if url.starts_with("http://") {
-        // http://github.com/user/repo.git -> git@github.com:user/repo.git
-        let without_prefix = url.strip_prefix("http://").unwrap();
-        if let Some(slash_pos) = without_prefix.find('/') {
-            let host = &without_prefix[..slash_pos];
-            let path = &without_prefix[slash_pos + 1..];
-            return format!("git@{}:{}", host, path);
-        }
-    }
-    
-    // 如果已经是 SSH，直接返回
-    url.to_string()
-}
-
-/// 生成克隆命令
-pub fn gen_clone_commands(repos: Vec<PathBuf>, transport: &str) -> Vec<String> {
+/// 生成克隆命令（保持原始协议类型）
+pub fn gen_clone_commands(repos: Vec<PathBuf>) -> Vec<String> {
     let mut commands = Vec::new();
     
     for repo in repos {
         if let Some(url) = get_default_remote_url(&repo) {
-            let final_url = match transport {
-                "ssh" => to_ssh(&url),
-                _ => to_http(&url), // 默认使用 HTTP
-            };
-            commands.push(format!("git clone {}", final_url));
+            // 直接使用原始 URL，不进行转换
+            commands.push(format!("git clone {}", url));
         } else {
             let repo_name = repo.file_name()
                 .map(|s| s.to_string_lossy())
